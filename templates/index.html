@@ -20,10 +20,14 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 50%;
+            width: 100%;
         }
-        h1 {
-            margin-bottom: 20px;
+        h1, h2 {
+            margin-bottom: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
         }
         textarea {
             width: 100%;
@@ -52,16 +56,40 @@
             font-weight: bold;
             color: red;
         }
+        .content {
+            width: 80%;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Sentiment Analysis</h1>
-        <form action="/predict" method="post">
-            <textarea name="sentence" rows="4" cols="50"></textarea><br><br>
-            <input type="submit" value="Analyze">
-        </form>
-        <div id="result"></div>
+    <div class="content">
+        <div style="display: flex; flex-direction: column ;justify-content: center; align-items: center;">
+            <h1>ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH </h1>
+            <h1>TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN </h1>
+            <h1>KHOA CÔNG NGHỆ THÔNG TIN</h1>
+            <img src="logo.png" alt="logo" width="100px" height="100px">
+            <h2>Đồ án cuối kì</h2>
+            <h3>Môn học: Học thống kê</h3>
+            <h3>Giáo viên hướng dẫn:</h3>
+            <ul>
+                <li>Thầy: Ngô Minh Nhựt</li>
+                <li>Thầy: Lê Long Quốc</li>
+            </ul>
+            <h3>Sinh viên thực hiện:</h3>
+            <ul>
+                <li>Hoàng Thành Nam - 2110099</li>
+                <li>Hồ Sỹ Kiên - 21120091</li>
+                <li>Đinh Thị Thúy Hường - 21120176</li>
+            </ul>
+        </div>
+        <div class="container">
+            <h1>Sentiment Analysis</h1>
+            <form action="/predict" method="post">
+                <textarea name="sentence" rows="4" cols="50"></textarea><br><br>
+                <input type="submit" value="Analyze">
+            </form>
+            <div id="result"></div>
+        </div>
     </div>
 
     <script>

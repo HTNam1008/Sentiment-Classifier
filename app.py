@@ -2,8 +2,9 @@ from flask import Flask, request, jsonify, render_template
 import torch
 from transformers import AutoTokenizer, AutoModel
 import torch.nn as nn
+import gdown
+import os
 
-# Định nghĩa lớp SentimentClassifier
 class SentimentClassifier(nn.Module):
     def __init__(self, n_classes):
         super(SentimentClassifier, self).__init__()
@@ -17,24 +18,29 @@ class SentimentClassifier(nn.Module):
         last_hidden_state, output = self.bert(
             input_ids=input_ids,
             attention_mask=attention_mask,
-            return_dict=False # Dropout will error without this
+            return_dict=False
         )
 
         x = self.drop(output)
         x = self.fc(x)
         return x
 
-# Tạo ứng dụng Flask
 app = Flask(__name__)
 
-# Load model và tokenizer
 device = torch.device("cpu")
 model = SentimentClassifier(n_classes=3).to(device)
-model.load_state_dict(torch.load('models/phobert_fold5.pth', map_location=device))
+
+# Tải mô hình từ Google Drive nếu chưa tồn tại
+model_path = 'phobert_fold5.pth'
+if not os.path.exists(model_path):
+    drive_file_id = '1-C07LYBp8zEf8Oovvw2dPdLCds_dIcRO'  # Thay thế bằng Google Drive ID thực tế
+    gdown.download(f'https://drive.google.com/uc?id={drive_file_id}', model_path, quiet=False)
+
+model.load_state_dict(torch.load(model_path, map_location=device))
 model.eval()
 tokenizer = AutoTokenizer.from_pretrained("vinai/phobert-base", use_fast=False)
 
-class_names = ['Tiêu cực', 'Bình thường', 'Tích cực']
+class_names = ['negative', 'neutral', 'positive']
 
 def infer(text, tokenizer, max_len=120):
     encoded_review = tokenizer.encode_plus(
@@ -44,7 +50,6 @@ def infer(text, tokenizer, max_len=120):
         add_special_tokens=True,
         padding='max_length',
         return_attention_mask=True,
-        return_token_type_ids=False,
         return_tensors='pt',
     )
 
